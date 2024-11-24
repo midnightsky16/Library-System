@@ -241,3 +241,43 @@ Content-Type: application/json
 {
   "archive": true
 }
+```
+---
+
+### A3. ENABLING AND DISABLING OF ACCOUNTS
+
+  - **Endpoint:** `/admin/users/toggle/{userid}`  
+  - **Method:** `PUT`  
+  - **Description:**  
+    This endpoint allows the admin to enable or disable a user account. The current status of the user account is checked, and if the account is currently "enabled," it will be disabled, and vice versa. Once the status is toggled, the updated status is reflected in the database. The admin is required to be authenticated via the `adminJwtMiddleware` before performing this action.
+
+  - **Sample Request (JSON):**
+    No request body is required for this operation, as the system will automatically toggle the user status.
+
+  - **Response:**
+    - **On Success (User Status Updated)**  
+      ```json
+      {
+        "status": "success",
+        "message": "User status updated"
+      }
+      ```
+
+    - **On Failure (Database Error or Other Issues)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+      **Headers:**
+      - `Content-Type`: `application/json`
+
+---
+
+### Example: Enabling or Disabling a User Account
+
+#### Request:
+```bash
+PUT /admin/users/toggle/12345
+```
