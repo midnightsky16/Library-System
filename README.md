@@ -7,25 +7,20 @@ This Library System API is a comprehensive application featuring full CRUD/A fun
 
 ## Features
 
-- JWT Authentication: Secure access to the API with JSON Web Tokens.
-- Token Revocation: Ensures tokens are valid for only one use, enhancing security.
-- CRUD/A (Create, Delete, Update, Delete and Archive) Operations: Manage Users and Books.
-- Error Handling: Comprehensive error messages for better debugging and client understanding.
+- **JWT Authentication:** Secure access to the API with JSON Web Tokens.
+- **Token Revocation:** Ensures tokens are valid for only one use, enhancing security.
+- **CRUD/A (Create, Delete, Update, Delete and Archive) Operations:** User and Author-Book Management.
+- **Error Handling:** Comprehensive error messages for better debugging and client understanding.
 
 
 
 ## Technology Used
 - **PHP:** Serves as the core backend programming language, leveraging the Slim Framework for efficient development.
 - **Slim Framework:** A lightweight and fast PHP framework ideal for building robust APIs.
-- Firebase JWT: A library used for securely managing JSON Web Tokens (JWT) for authentication.
+- **Firebase JWT:** A library used for securely managing JSON Web Tokens (JWT) for authentication.
 - **PSR-7:** Provides standardized HTTP message interfaces for consistent request and response handling.
   
 ---
-
-
-
-
-
 
 ## API Authentication and Token Management
 
