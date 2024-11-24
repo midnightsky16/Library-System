@@ -716,6 +716,13 @@ This documentation outlines the authentication mechanism for the user section of
         "message": "Book not found or has been archived."
       }
       ```
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
+      }
+      ```
 
     - **On Failure (Database Error)**  
       ```json
