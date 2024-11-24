@@ -740,7 +740,7 @@ This documentation outlines the authentication mechanism for the user section of
     - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
 ---
 
-### US2. USER VIEW BOOK LIST
+### US3. USER VIEW BOOK LIST
 
   - **Endpoint:** `/books`  
   - **Method:** `GET`  
@@ -794,7 +794,7 @@ This documentation outlines the authentication mechanism for the user section of
 
 ---
 
-### US3. USER VIEW SPECIFIC BOOK
+### US4. USER VIEW SPECIFIC BOOK
 
   - **Endpoint:** `/books/{bookid}`  
   - **Method:** `GET`  
