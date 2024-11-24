@@ -106,5 +106,35 @@ function createJWT($username, $key) {
 
 # CREATE, READ, UPDATE, DELETE AND ARCHIVE (CRUD/A) OPERATIONS
 
-## Admin Side Endpoints (ASE)
+## Admin Side Endpoints
 
+### A1. USER AUTHENTICATE
+  - **Endpoint:** `/user/authenticate`  
+  - **Method:** `POST`  
+  - **Description:** 
+    Validates user credentials by checking the provided username and password against the database. If authentication is successful, a JSON Web Token (JWT) is generated and returned for secure session handling.  - **Sample Request(JSON):**
+      ```json
+          {
+            "username": "janedoe",
+            "password": "securepassword123"
+          }
+      ```
+  - **Response:**
+      - **On Success**
+          ```json
+              {
+                  "status": "success",
+                  "token": "<TOKEN>",
+                  "data": null
+              }
+          ```
+      - **On Failure (Authenthication Failed):**
+          ```json
+              {
+                  "status": "fail",
+                  "data": {
+                      "title": "Authentication Failed!"
+                  }
+              }
+          ```
+---
