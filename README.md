@@ -584,14 +584,6 @@ This documentation outlines the authentication mechanism for the author section 
       }
       ```
 
-    - **On Failure (Error or Invalid Token)**
-      ```json
-      {
-        "status": "error",
-        "message": "You must be logged in to log out"
-      }
-      ```
-
     **Headers:**
     - `Content-Type`: `application/json`
     - `Authorization`: `Bearer <JWT_TOKEN>` (This is included in the header to authenticate the request.)
