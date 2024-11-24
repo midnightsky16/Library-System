@@ -680,6 +680,65 @@ This documentation outlines the authentication mechanism for the user section of
   - `Content-Type`: `application/json`
 
 ---
+### US2. USER LOGIN
+
+  - **Endpoint:** `/user/login`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows an existing user to log in by providing their username and password. The system verifies the credentials, and if they are correct, it generates a JWT (JSON Web Token) that is sent as a cookie to the client for session management. The client must use this token for subsequent requests that require authentication. If the credentials are incorrect, the request is denied with a 401 status.
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "username": "johndoe",
+        "password": "securepassword123"
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Login Successful)**  
+      If the credentials are valid and the login is successful:
+      ```json
+      {
+        "status": "success",
+        "message": "Login successful"
+      }
+      ```
+
+    - **On Failure (Authentication Failed)**  
+      If the credentials are incorrect:
+      ```json
+      {
+        "status": "failed",
+        "message": "Authentication failed"
+      }
+      ```
+      **HTTP Status Code:** `401 Unauthorized`
+
+    - **On Failure (Account Disabled)**  
+      If the user’s account is disabled:
+      ```json
+      {
+        "status": "failed",
+        "message": "Your account has been disabled. Please contact the admin to reactivate your account."
+      }
+      ```
+      **HTTP Status Code:** `403 Forbidden`
+
+    - **On Failure (Database Error)**  
+      If there is a database-related error:
+      ```json
+      {
+        "status": "failed",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+      **HTTP Status Code:** `500 Internal Server Error`
+
+  - **Headers:**
+    - `Content-Type`: `application/json`
+    - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+---
 
 ### US2. USER VIEW BOOK LIST
 
@@ -782,4 +841,42 @@ This documentation outlines the authentication mechanism for the user section of
   **Headers:**
   - `Content-Type`: `application/json`
   - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+
+---
+### US5. USER LOGOUT
+
+  - **Endpoint:** `/user/logout`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows an authenticated user to log out by clearing the authentication token (`auth_token`) stored in a cookie. Upon successful logout, the user is logged out, and the authentication token is removed from the browser's cookies.
+
+    **Note:** If the user is not logged in (i.e., there is no valid JWT token in the request), they will not be able to perform any operations, including logging out.
+
+  - **JWT Token Required:** Yes (The request must contain a valid JWT token in the `Authorization` header)
+
+  - **Parameters:**  
+    None (The logout operation is based solely on the JWT token passed in the request).
+
+  - **Sample Request (JSON):**
+    ```json
+    {}
+    ```
+
+  - **Response:**
+    - **On Success (Logout Successful)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Logged out successfully"
+      }
+      ```
+
+  - **Headers:**
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer <JWT_TOKEN>` (This is included in the header to authenticate the request.)
+
+  - **Cookies:**
+    - `auth_token`: The authentication token will be cleared in the response.
+
+---
 
