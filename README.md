@@ -219,6 +219,14 @@ This documentation outlines the authentication mechanism for the admin section o
       - `Set-Cookie`: `admin_auth_token=<NEW_JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
       - `Content-Type`: `application/json`
 
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
+      }
+      ```
+      
     - **On Failure (Database Error or Other Issues)**
       ```json
       {
@@ -260,6 +268,13 @@ Content-Type: application/json
       {
         "status": "success",
         "message": "User status updated"
+      }
+      ```
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
       }
       ```
 
@@ -428,6 +443,13 @@ This documentation outlines the authentication mechanism for the author section 
         "message": "Author not found"
       }
       ```
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
+      }
+      ```
 
     - **On Failure (Database Error or Other Issues)**  
       ```json
@@ -486,6 +508,13 @@ This documentation outlines the authentication mechanism for the author section 
         "message": "Book not found or you do not have permission to edit this book"
       }
       ```
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
+      }
+      ```
 
     - **On Failure (Database Error or Other Issues)**  
       ```json
@@ -539,6 +568,14 @@ This documentation outlines the authentication mechanism for the author section 
       {
         "status": "error",
         "message": "Book not found or you do not have permission to delete this book"
+      }
+      ```
+    
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
       }
       ```
 
@@ -677,6 +714,13 @@ This documentation outlines the authentication mechanism for the user section of
       }
       ```
 
+    - **On Failure (User not logged-in. Token or Session Expired)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Unauthorized: Expired token"
+      }
+      ```
     - **On Failure (Database Error)**  
       ```json
       {
