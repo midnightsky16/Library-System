@@ -3,7 +3,13 @@
 
 This Library System API is a comprehensive application featuring full CRUD/A functionality (Create, Read, Update, Delete, and Archive) with enhanced security measures, including JWT (JSON Web Token) tokenization for secure authentication and data integrity. The token circulation is automated so that there's no need no manualy insert the token to authenticate when performing an operation.
 
+## Table of Contents
 
+1. [Features](#features)
+2. [Technology Used](#technology-used)
+3. [Setting Up Database](#setting-up-database)
+4. [API Authentication and Token Management](#api-authentication-and-token-management)
+5. [JWT Middleware for User and Author Side](#jwt-middleware-for-user-and-author)
 
 ## Features
 
