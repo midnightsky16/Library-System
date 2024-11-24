@@ -599,28 +599,133 @@ This documentation outlines the authentication mechanism for the user section of
 
 ### US1. USER REGISTRATION
 
-### Endpoint:
-- `POST /user/register`
 
-### Description:
-This endpoint allows a new user to register by providing a `username` and `password`. The server checks if the provided username is already taken. If not, it inserts the new user into the database, hashes the password using SHA-256, and returns a success message along with a JWT token for authentication.
+  - **Endpoint:** `/user/register`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows a new user to register by providing a `username` and `password`. The system checks if the `username` is already taken. If not, the new user's details are added to the database, and their password is securely hashed using the SHA-256 algorithm. This endpoint does not require authentication, as it is for new users who want to register.
 
-**Note:** This operation does not require a JWT token, as it is for initial user registration.
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "username": "newuser123",
+        "password": "newpassword123"
+    }
+    ```
 
-### JWT Token Required:
-- **No** (this is for registration, so no token is required)
+  - **Response:**
+    - **On Success (Registration Successful)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Registration Successful",
+        "token": "<JWT_TOKEN>"
+      }
+      ```
 
-### Parameters (Request Body):
-- `username` (string): The desired username for the new user.
-- `password` (string): The password for the new user.
+    - **On Failure (Username Already Taken)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Username already taken"
+      }
+      ```
 
-### Sample Request (JSON):
-```json
-{
-  "username": "newuser123",
-  "password": "newpassword123"
-}
+    - **On Failure (Database Error)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+  **Headers:**
+  - `Content-Type`: `application/json`
+
+---
+
+### US2. USER VIEW BOOK LIST
+
+  - **Endpoint:** `/books`  
+  - **Method:** `GET`  
+  - **Description:**  
+    This endpoint allows a user to view the list of non-archived books along with their authors. It fetches only the books that are not archived (`archived = 0`) and includes the author's name in the response. The response also includes a new JWT token for the user, which is set in the `auth_token` cookie.
 
 
+  - **Response:**
+    - **On Success (Books Available)**  
+      ```json
+      [
+        {
+          "bookid": 1,
+          "title": "Book Title 1",
+          "author": "Author Name"
+        },
+        {
+          "bookid": 2,
+          "title": "Book Title 2",
+          "author": "Author Name"
+        }
+      ]
+      ```
 
+    - **On Success (No Books Available)**  
+      ```json
+      {
+        "status": "success",
+        "message": "No Books Available"
+      }
+      ```
+
+    - **On Failure (Database Error)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+  **Headers:**
+  - `Content-Type`: `application/json`
+  - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+
+---
+
+### US3. USER VIEW SPECIFIC BOOK
+
+  - **Endpoint:** `/books/{bookid}`  
+  - **Method:** `GET`  
+  - **Description:**  
+    This endpoint allows a user to view the details of a specific book by its `bookid`. The system retrieves the book's title, author, and content, ensuring that the book is not archived (`archived = 0`). The response also includes a new JWT token for the user, set in the `auth_token` cookie.
+
+
+  - **Response:**
+    - **On Success (Book Found)**  
+      ```json
+      {
+        "title": "Book Title",
+        "author": "Author Name",
+        "content": "Book content here..."
+      }
+      ```
+
+    - **On Failure (Book Not Found or Archived)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Book not found or has been archived."
+      }
+      ```
+
+    - **On Failure (Database Error)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+  **Headers:**
+  - `Content-Type`: `application/json`
+  - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
 
