@@ -42,11 +42,11 @@ The API leverages JWT (JSON Web Tokens) for secure authentication and session ma
 ---
 
 
-# Middleware for User and Author Side
+# JWT Middleware for User and Author Side
 
 This `middleware` ensures secure authentication by validating JWT tokens stored in **httpOnly cookies**. If a valid token is present, the request is authorized, and a new token is generated to maintain session continuity. Below is the implementation:
 
-## Middleware Implementation
+## User and Author Middleware Function
 
 ```php
 // Middleware to check JWT token stored in httpOnly cookies
@@ -79,6 +79,47 @@ $jwtMiddleware = function (Request $request, Response $response, $next) {
 };
 
 ```
+# JWT Middleware for Admin Side
+
+This document provides an overview of the middleware function designed to handle JWT (JSON Web Token) authentication for the Admin side of an application. The middleware checks if the JWT token is present in the `httpOnly` cookies and verifies it for authorized access. If valid, it generates a new token and refreshes the `admin_auth_token` cookie for the next request.
+
+## Admin Middleware Function
+
+```php
+// Middleware to check JWT token stored in httpOnly cookies for Admin
+$adminJwtMiddleware = function (Request $request, Response $response, $next) {
+    $cookies = $request->getCookieParams();
+    $token = $cookies['admin_auth_token'] ?? '';
+
+    if ($token) {
+        try {
+            // Decode the token with the secret key
+            $decoded = JWT::decode($token, new Key($GLOBALS['key'], 'HS256'));
+            $request = $request->withAttribute('jwt', $decoded);
+
+            // Proceed with the request
+            $response = $next($request, $response);
+
+            // After the action, generate a new token and set the cookie
+            $username = $decoded->data->username;
+            $newToken = createJWT($username, $GLOBALS['key']); // Same helper function
+            $cookie = 'admin_auth_token=' . $newToken . '; Path=/; HttpOnly; SameSite=Strict;';
+
+            return $response->withHeader('Set-Cookie', $cookie);
+        } catch (Exception $e) {
+            // Handle invalid or expired token error
+            $response->getBody()->write(json_encode(["status" => "failed", "message" => "Unauthorized: " . $e->getMessage()]));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+        }
+    } else {
+        // Handle missing token error
+        $response->getBody()->write(json_encode(["status" => "failed", "message" => "Token not provided"]));
+        return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+    }
+};
+```
+
+
 ## Helper Function: Generate JWT Token
 
 The `createJWT` function is a utility to generate secure JSON Web Tokens (JWT) for authentication and session management. Below is a detailed explanation of its parameters, structure, and purpose.
@@ -108,33 +149,95 @@ function createJWT($username, $key) {
 
 ## Admin Side Endpoints
 
-### A1. USER AUTHENTICATE
-  - **Endpoint:** `/user/authenticate`  
+
+This documentation outlines the authentication mechanism for the admin section of the application. The system utilizes JWT (JSON Web Tokens) and cookies to manage secure sessions for the admin user. It consists of an endpoint for logging in as an admin and a middleware for validating JWT tokens.
+
+## A1. ADMIN LOGIN ENDPOINT
+
+  - **Endpoint:** `/admin/login`  
   - **Method:** `POST`  
-  - **Description:** 
-    Validates user credentials by checking the provided username and password against the database. If authentication is successful, a JSON Web Token (JWT) is generated and returned for secure session handling.  - **Sample Request(JSON):**
-      ```json
-          {
-            "username": "janedoe",
-            "password": "securepassword123"
-          }
-      ```
+  - **Description:**  
+    This endpoint is used for authenticating the admin user by validating the provided username and password. If the credentials are correct, a JSON Web Token (JWT) is generated and stored in an `httpOnly` cookie for future secure requests. This token ensures that the admin remains authenticated across sessions.
+  
+  - **Sample Request (JSON):**
+    ```json
+    {
+      "username": "adminls",
+      "password": "cit@adminls"
+    }
+    ```
+  
   - **Response:**
-      - **On Success**
-          ```json
-              {
-                  "status": "success",
-                  "token": "<TOKEN>",
-                  "data": null
-              }
-          ```
-      - **On Failure (Authenthication Failed):**
-          ```json
-              {
-                  "status": "fail",
-                  "data": {
-                      "title": "Authentication Failed!"
-                  }
-              }
-          ```
+    - **On Success (Admin Login Successful)**
+      ```json
+      {
+        "status": "success",
+        "message": "Admin login successful"
+      }
+      ```
+      **Headers:**
+      - `Set-Cookie`: `admin_auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+      - `Content-Type`: `application/json`
+      
+    - **On Failure (Authentication Failed)**
+      ```json
+      {
+        "status": "failed",
+        "message": "Authentication failed"
+      }
+      ```
+      **Headers:**
+      - `Content-Type`: `application/json`
+      
 ---
+### A2. ADMIN ARCHIVING AND UNARCHIVING BOOKS
+
+  - **Endpoint:** `/admin/books/toggleArchive/{bookid}`  
+  - **Method:** `PUT`  
+  - **Description:**  
+    This endpoint allows the admin to archive or unarchive a book by updating its `archived` status in the database. The `archive` status is passed as a boolean in the request body (`true` for archiving, `false` for unarchiving). Once the operation is performed, a new JWT token is generated for the admin, and the updated token is stored in an `httpOnly` cookie for secure session handling.
+
+    - **True (archive):** Archives the book, setting the `archived` field to `true`.
+    - **False (unarchive):** Unarchives the book, setting the `archived` field to `false`.
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+      "archive": true
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Book Archive Status Updated)**
+      ```json
+      {
+        "status": "success",
+        "message": "Book archive status updated"
+      }
+      ```
+      **Headers:**
+      - `Set-Cookie`: `admin_auth_token=<NEW_JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+      - `Content-Type`: `application/json`
+
+    - **On Failure (Database Error or Other Issues)**
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+      **Headers:**
+      - `Content-Type`: `application/json`
+
+---
+
+### Example: Admin Archiving a Book
+
+#### Request:
+```bash
+PUT /admin/books/toggleArchive/12345
+Content-Type: application/json
+
+{
+  "archive": true
+}
