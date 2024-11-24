@@ -44,7 +44,7 @@ The API leverages JWT (JSON Web Tokens) for secure authentication and session ma
 
 # Middleware for User and Author Side
 
-This middleware ensures secure authentication by validating JWT tokens stored in **httpOnly cookies**. If a valid token is present, the request is authorized, and a new token is generated to maintain session continuity. Below is the implementation:
+This `middleware` ensures secure authentication by validating JWT tokens stored in **httpOnly cookies**. If a valid token is present, the request is authorized, and a new token is generated to maintain session continuity. Below is the implementation:
 
 ## Middleware Implementation
 
