@@ -400,7 +400,7 @@ This documentation outlines the authentication mechanism for the author section 
 #### Request:
 ```bash
 POST /author/login
-
+```
 
 
 
