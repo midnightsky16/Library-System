@@ -593,6 +593,34 @@ This documentation outlines the authentication mechanism for the author section 
 
 ---
 
+## User Side Endpoints
+
+This documentation outlines the authentication mechanism for the user section of the application. The system utilizes JWT (JSON Web Tokens) and cookies to manage secure sessions for the users. The users need to be logged-in to view the available books in the library system.
+
+### US1. USER REGISTRATION
+
+### Endpoint:
+- `POST /user/register`
+
+### Description:
+This endpoint allows a new user to register by providing a `username` and `password`. The server checks if the provided username is already taken. If not, it inserts the new user into the database, hashes the password using SHA-256, and returns a success message along with a JWT token for authentication.
+
+**Note:** This operation does not require a JWT token, as it is for initial user registration.
+
+### JWT Token Required:
+- **No** (this is for registration, so no token is required)
+
+### Parameters (Request Body):
+- `username` (string): The desired username for the new user.
+- `password` (string): The password for the new user.
+
+### Sample Request (JSON):
+```json
+{
+  "username": "newuser123",
+  "password": "newpassword123"
+}
+
 
 
 
