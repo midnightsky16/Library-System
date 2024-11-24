@@ -38,3 +38,73 @@ The API leverages JWT (JSON Web Tokens) for secure authentication and session ma
 ### Token Restrictions:
 
 - Tokens that have already been used for an operation cannot be reused for subsequent CRUD/A actions, ensuring enhanced security and preventing token misuse.
+
+---
+
+
+# Middleware for User and Author Side
+
+This middleware ensures secure authentication by validating JWT tokens stored in **httpOnly cookies**. If a valid token is present, the request is authorized, and a new token is generated to maintain session continuity. Below is the implementation:
+
+## Middleware Implementation
+
+```php
+// Middleware to check JWT token stored in httpOnly cookies
+$jwtMiddleware = function (Request $request, Response $response, $next) {
+    $cookies = $request->getCookieParams();
+    $token = $cookies['auth_token'] ?? '';
+
+    if ($token) {
+        try {
+            $decoded = JWT::decode($token, new Key($GLOBALS['key'], 'HS256'));
+            $request = $request->withAttribute('jwt', $decoded);
+            
+            // Proceed with the request
+            $response = $next($request, $response);
+
+            // After the action, generate a new token and set the cookie
+            $username = $decoded->data->username;
+            $newToken = createJWT($username, $GLOBALS['key']);
+            $cookie = 'auth_token=' . $newToken . '; Path=/; HttpOnly; SameSite=Strict;';
+            
+            return $response->withHeader('Set-Cookie', $cookie);
+        } catch (Exception $e) {
+            $response->getBody()->write(json_encode(["status" => "failed", "message" => "Unauthorized: " . $e->getMessage()]));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+        }
+    } else {
+        $response->getBody()->write(json_encode(["status" => "failed", "message" => "Token not provided"]));
+        return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+    }
+};
+
+```
+## Helper Function: Generate JWT Token
+
+The `createJWT` function is a utility to generate secure JSON Web Tokens (JWT) for authentication and session management. Below is a detailed explanation of its parameters, structure, and purpose.
+
+### Function Definition
+
+```php
+// Helper function to create JWT token
+function createJWT($username, $key) {
+    $expire = time();
+    $payload = [
+        'iss' => 'http://cit.dmmmsu.gov.ph', // Issuer of the token
+        'aud' => 'http://cit.elibrary.gov.ph', // Audience for whom the token is intended
+        'iat' => $expire,                     // Issued at timestamp
+        'exp' => $expire + (60 * 60),         // Expiration timestamp (1 hour)
+        'data' => [
+            'username' => $username           // Payload data containing the username
+        ]
+    ];
+    return JWT::encode($payload, $key, 'HS256'); // Encodes the payload using the secret key and HS256 algorithm
+}
+```
+
+
+
+# CREATE, READ, UPDATE, DELETE AND ARCHIVE (CRUD/A) OPERATIONS
+
+## Admin Side Endpoints (ASE)
+
