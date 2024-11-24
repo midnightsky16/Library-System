@@ -745,8 +745,7 @@ This documentation outlines the authentication mechanism for the user section of
   - **Sample Request (JSON):**
     - `/books/2`  
     ```json
-    {
-    }
+    {}
   - **Response:**
     - **On Success (Book Found)**  
       ```json
