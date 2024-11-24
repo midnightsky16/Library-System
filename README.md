@@ -19,7 +19,37 @@ This Library System API is a comprehensive application featuring full CRUD/A fun
 - **Slim Framework:** A lightweight and fast PHP framework ideal for building robust APIs.
 - **[Firebase JWT](https://github.com/firebase/php-jwt):** A library used for securely managing JSON Web Tokens (JWT) for authentication.
 - **PSR-7:** Provides standardized HTTP message interfaces for consistent request and response handling.
-  
+- **PHP & MySQL:** PHP is used for the backend logic and MySQL serves as the relational database management system for storing user data, including credentials and account status.
+
+---
+
+
+## Setting Up Database
+
+To set up the MySQL database for the application, follow these steps:
+
+1. **Install XAMPP** (if you haven't already):
+   - Download and install [XAMPP](https://www.apachefriends.org/index.html), which includes PHP, MySQL, and Apache. This will provide the necessary environment for running the backend and database locally.
+
+2. **Start the XAMPP Services**:
+   - Open the XAMPP control panel and start both **Apache** (for PHP) and **MySQL** (for the database).
+
+3. **Create the Database**:
+   - Open **phpMyAdmin** by navigating to `http://localhost/phpmyadmin/` in your web browser.
+   - In the **phpMyAdmin** interface, click on **Databases** in the top menu.
+   - Under the **Create database** section, enter the name **library** and click **Create**.
+
+4. **Import the SQL File**:
+   - Locate the `db` folder in the project directory. Inside the `db` folder, you will find the **`library.sql`** file.
+   - Go to the **phpMyAdmin** interface, and click on the **library** database you just created.
+   - In the top menu, click on the **Import** tab.
+   - Click on **Choose File**, select the **`library.sql`** file from the `db` folder, and click **Go** to import the database schema.
+   - This will create the necessary tables and populate them with sample data.
+
+5. **Verify the Database**:
+   - After the import is complete, you should see several tables (such as `users`, `books`, etc.) under the **library** database in phpMyAdmin.
+   - Ensure that the database has been correctly set up by checking that the tables have been populated with initial data.
+
 ---
 
 ## API Authentication and Token Management
