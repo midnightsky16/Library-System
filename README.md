@@ -9,7 +9,7 @@ This Library System API is a comprehensive application featuring full CRUD/A fun
 2. [Technology Used](#technology-used)
 3. [Setting Up Database](#setting-up-database)
 4. [API Authentication and Token Management](#api-authentication-and-token-management)
-5. [JWT Middleware for User and Author Side](#jwt-middleware-for-user-and-author)
+5. [JWT Middleware for User and Author Side](#jwt-middleware-for-user-and-author-side)
 
 ## Features
 
