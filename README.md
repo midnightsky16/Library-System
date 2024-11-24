@@ -698,7 +698,11 @@ This documentation outlines the authentication mechanism for the user section of
   - **Description:**  
     This endpoint allows a user to view the details of a specific book by its `bookid`. The system retrieves the book's title, author, and content, ensuring that the book is not archived (`archived = 0`). The response also includes a new JWT token for the user, set in the `auth_token` cookie.
 
-
+  - **Sample Request (JSON):**
+    - `/books/2`  
+    ```json
+    {
+    }
   - **Response:**
     - **On Success (Book Found)**  
       ```json
