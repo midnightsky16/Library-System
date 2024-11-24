@@ -281,3 +281,74 @@ Content-Type: application/json
 ```bash
 PUT /admin/users/toggle/12345
 ```
+## A4. ADMIN LOGOUT ENDPOINT
+
+The `/admin/logout` endpoint is responsible for securely logging out an admin user by performing the following:
+
+1. **Token Removal**: Clears the `admin_auth_token` cookie by setting it with an expired timestamp.
+2. **Response**: Returns a JSON response indicating successful logout.
+3. **Security**: Ensures that the `HttpOnly` and `SameSite=Strict` attributes are applied to the cookie to prevent security vulnerabilities.
+
+### Route Implementation
+
+```php
+$app->post('/admin/logout', function (Request $request, Response $response, array $args) {
+    $cookie = 'admin_auth_token=; Path=/; HttpOnly; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    $response->getBody()->write(json_encode(["status" => "success", "message" => "Logged out successfully"]));
+    return $response->withHeader('Set-Cookie', $cookie)->withHeader('Content-Type', 'application/json');
+});
+```
+---
+
+## Author Side Endpoints
+
+This documentation outlines the authentication mechanism for the author section of the application. The system utilizes JWT (JSON Web Tokens) and cookies to manage secure sessions for the authors. It consists of an endpoint for logging in as an author and a middleware for validating JWT tokens.
+
+## AS1. AUTHOR REGISTRATION
+
+
+  - **Endpoint:** `/author/register`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows a new author to register by providing their name, a unique username, and a password. The system checks if the username is already taken. If not, the new author’s details are added to the database, and their password is securely hashed using the SHA-256 algorithm. This endpoint does not require authentication, as it is for new users who want to register.
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "name": "John Doe",
+        "username": "johndoe",
+        "password": "securepassword123"
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Registration Successful)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Author registration successful"
+      }
+      ```
+
+    - **On Failure (Username Already Taken)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Username already taken"
+      }
+      ```
+
+    - **On Failure (Database Error)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+      **Headers:**
+      - `Content-Type`: `application/json`
+
+---
+
+
+
