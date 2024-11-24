@@ -395,12 +395,7 @@ This documentation outlines the authentication mechanism for the author section 
 
 ---
 
-### Example: Author Login
 
-#### Request:
-```bash
-POST /author/login
-```
 
 
 
