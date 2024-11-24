@@ -17,7 +17,7 @@ This Library System API is a comprehensive application featuring full CRUD/A fun
 ## Technology Used
 - **PHP:** Serves as the core backend programming language, leveraging the Slim Framework for efficient development.
 - **Slim Framework:** A lightweight and fast PHP framework ideal for building robust APIs.
-- **Firebase JWT:** A library used for securely managing JSON Web Tokens (JWT) for authentication.
+- **[Firebase JWT](https://github.com/firebase/php-jwt):** A library used for securely managing JSON Web Tokens (JWT) for authentication.
 - **PSR-7:** Provides standardized HTTP message interfaces for consistent request and response handling.
   
 ---
