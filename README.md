@@ -281,7 +281,7 @@ Content-Type: application/json
 ```bash
 PUT /admin/users/toggle/12345
 ```
-## A4. ADMIN LOGOUT ENDPOINT
+### A4. ADMIN LOGOUT ENDPOINT
 
 The `/admin/logout` endpoint is responsible for securely logging out an admin user by performing the following:
 
@@ -304,7 +304,7 @@ $app->post('/admin/logout', function (Request $request, Response $response, arra
 
 This documentation outlines the authentication mechanism for the author section of the application. The system utilizes JWT (JSON Web Tokens) and cookies to manage secure sessions for the authors. It consists of an endpoint for logging in as an author and a middleware for validating JWT tokens.
 
-## AS1. AUTHOR REGISTRATION
+### AS1. AUTHOR REGISTRATION
 
 
   - **Endpoint:** `/author/register`  
@@ -349,6 +349,58 @@ This documentation outlines the authentication mechanism for the author section 
       - `Content-Type`: `application/json`
 
 ---
+
+### AS2. AUTHOR LOGIN
+
+  - **Endpoint:** `/author/login`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows an existing author to log in by providing their username and password. The system verifies the credentials, and if they are correct, it generates a JWT (JSON Web Token) that is sent as a cookie to the client for session management. The client must use this token for subsequent requests that require authentication. If the credentials are incorrect, the request is denied with a 401 status.
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "username": "johndoe",
+        "password": "securepassword123"
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Login Successful)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Login successful"
+      }
+      ```
+
+    - **On Failure (Authentication Failed)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "Authentication failed"
+      }
+      ```
+
+    - **On Failure (Database Error)**  
+      ```json
+      {
+        "status": "failed",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+      **Headers:**
+      - `Content-Type`: `application/json`
+      - `Set-Cookie`: `auth_token=<JWT_TOKEN>; Path=/; HttpOnly; SameSite=Strict;`
+
+---
+
+### Example: Author Login
+
+#### Request:
+```bash
+POST /author/login
+
 
 
 
