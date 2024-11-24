@@ -395,6 +395,211 @@ This documentation outlines the authentication mechanism for the author section 
 
 ---
 
+### AS3. AUTHOR ADD BOOK
+
+  - **Endpoint:** `/author/books/add`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows an authenticated author to add a new book. The author must provide a title and content for the book. The request must include a valid JWT (JSON Web Token) to identify the author. The system will verify the JWT, fetch the author's ID based on the username in the token, and then insert the new book into the database. If the book is successfully added, a success message is returned. If there are any issues, appropriate error messages are returned.
+
+  - **JWT Token Required:** Yes (the request must contain a valid JWT token in the `Authorization` header)
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "title": "My New Book",
+        "content": "This is the content of the book."
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Book Added)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Book added successfully"
+      }
+      ```
+
+    - **On Failure (Author Not Found)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Author not found"
+      }
+      ```
+
+    - **On Failure (Database Error or Other Issues)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+    **Headers:**
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer <JWT_TOKEN>`
+
+---
+### AS4. AUTHOR EDIT BOOK
+
+  - **Endpoint:** `/author/books/edit/{bookid}`  
+  - **Method:** `PUT`  
+  - **Description:**  
+    This endpoint allows an authenticated author to update an existing book's title and content. The author must be authenticated with a valid JWT token. The book's `bookid` must match an existing book owned by the logged-in author. If the book exists and belongs to the author, the book's title and content will be updated. If the author does not own the book, or the book does not exist, an error will be returned.
+
+  - **JWT Token Required:** Yes (the request must contain a valid JWT token in the `Authorization` header)
+
+  - **Parameters:**
+    - `bookid`: The ID of the book that the author wants to edit (provided in the URL path).
+
+  - **Sample Request (JSON):**
+    ```json
+    {
+        "title": "Updated Book Title",
+        "content": "Updated content for the book."
+    }
+    ```
+
+  - **Response:**
+    - **On Success (Book Updated)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Book updated successfully"
+      }
+      ```
+
+    - **On Failure (Author Not Found)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Author not found"
+      }
+      ```
+
+    - **On Failure (Book Not Found or Permission Denied)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Book not found or you do not have permission to edit this book"
+      }
+      ```
+
+    - **On Failure (Database Error or Other Issues)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+    **Headers:**
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer <JWT_TOKEN>`
+
+---
+### AS5. AUTHOR DELETE BOOK
+
+  - **Endpoint:** `/author/books/delete/{bookid}`  
+  - **Method:** `DELETE`  
+  - **Description:**  
+    This endpoint allows an authenticated author to delete a book that they own. The author must be authenticated with a valid JWT token. The book's `bookid` must match an existing book owned by the logged-in author. If the book exists and belongs to the author, it will be deleted. If the author does not own the book, or the book does not exist, an error will be returned.
+
+  - **JWT Token Required:** Yes (the request must contain a valid JWT token in the `Authorization` header)
+
+  - **Parameters:**
+    - `bookid`: The ID of the book that the author wants to delete (provided in the URL path).
+
+  - **Sample Request (JSON):**
+    ```json
+    {}
+    ```
+
+  - **Response:**
+    - **On Success (Book Deleted)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Book deleted successfully"
+      }
+      ```
+
+    - **On Failure (Author Not Found)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Author not found"
+      }
+      ```
+
+    - **On Failure (Book Not Found or Permission Denied)**  
+      ```json
+      {
+        "status": "error",
+        "message": "Book not found or you do not have permission to delete this book"
+      }
+      ```
+
+    - **On Failure (Database Error or Other Issues)**  
+      ```json
+      {
+        "status": "error",
+        "message": "<ERROR_MESSAGE>"
+      }
+      ```
+
+    **Headers:**
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer <JWT_TOKEN>`
+
+---
+
+### AS6. AUTHOR LOGOUT
+
+  - **Endpoint:** `/author/logout`  
+  - **Method:** `POST`  
+  - **Description:**  
+    This endpoint allows an authenticated author to log out by clearing the authentication token (`auth_token`) stored in a cookie. Upon successful logout, the author is logged out, and the authentication token is removed from the browser's cookies.
+
+    **Note:** If the user is not logged in (i.e., there is no valid JWT token in the request), they will not be able to perform any operations, including logging out.
+
+  - **JWT Token Required:** Yes (The request must contain a valid JWT token in the `Authorization` header)
+
+  - **Parameters:**  
+    None (The logout operation is based solely on the JWT token passed in the request).
+
+  - **Sample Request (JSON):**
+    ```json
+    {}
+    ```
+
+  - **Response:**
+    - **On Success (Logout Successful)**  
+      ```json
+      {
+        "status": "success",
+        "message": "Logged out successfully"
+      }
+      ```
+
+    - **On Failure (Error or Invalid Token)**
+      ```json
+      {
+        "status": "error",
+        "message": "You must be logged in to log out"
+      }
+      ```
+
+    **Headers:**
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer <JWT_TOKEN>` (This is included in the header to authenticate the request.)
+
+    **Cookies:**
+    - `auth_token`: The authentication token will be cleared in the response.
+
+---
 
 
 
